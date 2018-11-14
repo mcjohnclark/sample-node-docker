@@ -11,6 +11,8 @@ jobs:
     - run:
         name: Build docker image
         command: |
+            npm install -g gulp
+            gulp dist
             docker build -t dockerapp .
     - deploy:
         name: Publish application to docker hub
