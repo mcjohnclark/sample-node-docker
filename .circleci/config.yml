@@ -9,9 +9,6 @@ jobs:
     - setup_remote_docker:
         docker_layer_caching: false
     - run:
-        name: Install Dependencies
-        command: apk add make bash
-    - run:
         name: Build Docker images
         command: make build
     - run:
