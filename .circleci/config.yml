@@ -11,7 +11,7 @@ jobs:
     - run:
         name: Build docker image
         command: |
-            docker build dockerapp .
+            docker build -t dockerapp .
     - deploy:
         name: Publish application to docker hub
         command: |
