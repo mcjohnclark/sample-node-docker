@@ -9,13 +9,14 @@ jobs:
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
-        name: Push to ECR
+        name: Build docker image
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install awscli
-            TAG=0.1.$CIRCLE_BUILD_NUM
-            docker build -t local:$TAG .
-            eval `aws ecr get-login | sed -e's/-e none//'`
-            docker tag local:$TAG $AWS_ECR_REGISTRY:$TAG
-            docker push $AWS_ECR_REGISTRY:$TAG
+            docker build dockerapp .
+    - deploy:
+        name: Publish application to docker hub
+          command: |
+            docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER_ID $DOCKER_HUB_PWD
+            docker tag dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+            docker tag dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest
+            docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+            docker push $DOCKER_HUB_USER_ID/dockerapp:latest
